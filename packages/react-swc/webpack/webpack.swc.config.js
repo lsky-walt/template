@@ -1,6 +1,11 @@
 const path = require("path")
+const webpack = require("webpack")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const chalk = require("chalk")
+const ProgressBarPlugin = require("progress-bar-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const TerserPlugin = require("terser-webpack-plugin")
 
 module.exports = {
   entry: {
@@ -26,7 +31,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: "swc-loader", // 使用 swc 作为编译器
         },
       },
       {
@@ -137,10 +142,63 @@ module.exports = {
       },
     ],
   },
+  mode: "production",
   plugins: [
+    new ProgressBarPlugin({
+      format: `  :msg [:bar] ${chalk.green.bold(":percent")} (:elapsed s)`,
+    }),
+    new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify("production"),
+      },
+    }),
     new HtmlWebPackPlugin({
       template: path.resolve(__dirname, "../index.ejs"),
       filename: path.resolve(__dirname, "../dist/index.html"),
     }),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].[chunkhash].css",
+      chunkFilename: "[id].[chunkhash].css",
+    }),
   ],
+  optimization: {
+    moduleIds: "deterministic",
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+      enforceSizeThreshold: 50000,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: { drop_console: true },
+          mangle: {
+            safari10: true,
+          },
+          keep_classnames: false,
+          keep_fnames: false,
+          output: {
+            ecma: 5,
+            comments: false,
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
+  },
 }

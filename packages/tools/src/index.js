@@ -1,9 +1,1 @@
-export * from "./type"
-export * from "./value"
-export * from "./request"
-export * from "./browser"
-export * from "./dom"
-export * from "./uuid"
-export * from "./debounce"
-export * from "./throttle"
-export * from "./date"
+console.log('test')
