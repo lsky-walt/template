@@ -1,37 +1,18 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { HashRouter as Router, Route, Switch, Link } from "react-router-dom"
-import Base from "./page/base"
+import Com from "src"
+import "./style.less"
+import { className } from "src/utils"
 
-import styles from "./style.less"
-
-class Nav extends React.PureComponent {
-  // eslint-disable-next-line class-methods-use-this
+class Index extends React.PureComponent {
   render() {
     return (
-      <Router>
-        <div className={styles["main-container"]} id="container">
-          <div className={styles.nav}>
-            <div className={styles.link}>
-              <div>
-                <Link to="/base">base</Link>
-              </div>
-            </div>
-          </div>
-          <div className={styles.content}>
-            <Switch>
-              <Route exact path="/">
-                <Base />
-              </Route>
-              <Route path="/base">
-                <Base />
-              </Route>
-            </Switch>
-          </div>
-        </div>
-      </Router>
+      <div className={className("site-container")}>
+        <h2>component</h2>
+        <Com />
+      </div>
     )
   }
 }
 
-ReactDOM.render(<Nav />, document.getElementById("app"))
+ReactDOM.render(<Index />, document.getElementById("app"))

@@ -1,5 +1,6 @@
 const { merge } = require("webpack-merge")
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const path = require("path")
 const base = require("./webpack.base.config")
 
@@ -10,9 +11,9 @@ module.exports = merge(
       index: "./src/index.jsx",
     },
     output: {
-      filename: "index.js",
+      filename: "index.umd.min.js",
       libraryTarget: "umd",
-      path: path.resolve(__dirname, "../lib/"),
+      path: path.resolve(__dirname, "../dist/"),
     },
     mode: "production",
     resolve: {
@@ -38,7 +39,12 @@ module.exports = merge(
         amd: "prop-types",
       },
     },
-    plugins: [new CleanWebpackPlugin()],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: "index.[chunkhash].css",
+      }),
+    ],
   },
   base
 )

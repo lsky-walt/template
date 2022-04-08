@@ -1,5 +1,6 @@
 const { merge } = require("webpack-merge")
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const webpack = require("webpack")
 const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
@@ -24,6 +25,9 @@ module.exports = merge(
     },
     plugins: [
       new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: "index.[chunkhash].css",
+      }),
       new HtmlWebPackPlugin({
         template: path.resolve(__dirname, "../site/index.ejs"),
         filename: path.resolve(__dirname, "../dist/index.html"),
@@ -38,7 +42,7 @@ module.exports = merge(
       host: process.env.HOST || "localhost",
       port: process.env.PORT || 8810,
       historyApiFallback: true,
-      contentBase: [path.join(__dirname, "./site")],
+      static: [path.join(__dirname, "./site")],
     },
   },
   base

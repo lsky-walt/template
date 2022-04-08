@@ -1,0 +1,4 @@
+{
+  "utils.ejs": "src/",
+  "webpack.base.config.ejs": "webpack/"
+}

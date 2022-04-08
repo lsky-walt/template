@@ -39,7 +39,9 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              modules: true,
+              modules: {
+                localIdentName: "<%= name %>-[local]",
+              },
               sourceMap: true,
             },
           },
@@ -53,7 +55,7 @@ module.exports = {
             loader: "css-loader",
             options: {
               modules: {
-                localIdentName: "test-abc-[local]",
+                localIdentName: "<%= name %>-[local]",
               },
               importLoaders: 2,
             },
